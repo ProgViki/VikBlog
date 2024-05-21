@@ -11,7 +11,7 @@ function Dashboards() {
         <DashboardCard title="Orders" value={123445} bordered={false}/>
       </Space>
       <Space>
-        <RecentOrders/> 
+        <RecentOrders /> 
       </Space>
     </div>
   )

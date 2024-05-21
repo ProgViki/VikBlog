@@ -5,6 +5,7 @@ import AppHeader from "./components/AppHeader";
 // import { Space } from "antd";
 import AppFooter from "./components/AppFooter";
 import "./App.css";
+// import AppRoutes from "./components/AppRouter";
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <div className="SideMenuAndPageContent">
       <SideMenu></SideMenu>
       <PageContent></PageContent>
+      {/* <AppRoutes></AppRoutes> */}
       </div>
       <AppFooter />
     </div>

@@ -1,26 +1,27 @@
 import { BellFilled, MailOutlined } from '@ant-design/icons'
-import { Drawer, Image, List, Typography } from 'antd'
+import { Drawer, Image, List, Typography, Space, Badge } from 'antd'
 import React from 'react'
-import "../../App.css"
+import "../App.css"
 
 function AppHeader() {
 
 
-    const [comments, setComments] = useState([])
-    const [orders, setOrders] = useState([])
-    const [commentsOpen, setCommentsOpen] = useState(false)
-    const [notificationsOpen, setNotificationsOpen] = useState(false)
+    // const [comments, setComments] = useState(0)
+    // const [orders, setOrders] = useState(0)
+    // const [commentsOpen, setCommentsOpen] = useState(false)
+    // const [notificationsOpen, setNotificationsOpen] = useState(false)
 
-    useEffect(() => {
-        getComments().then((res) => {
-            setComments(res.comments);
-        });
-        getOrders().then((res) => {
-            setOrders(res.products);
-        });
-    }, []);
+    // useEffect(() => {
+    //     getComments().then((res) => {
+    //         setComments(res.comments);
+    //     });
+    //     getOrders().then((res) => {
+    //         setOrders(res.products);
+    //     });
+    // }, []);
 
   return (
+    
     <div className="AppHeader">
       {/* <Image 
       width={40}
@@ -30,19 +31,21 @@ function AppHeader() {
       </Image> */}
       <Typography.Title>Viki's Dashboard</Typography.Title>
       <Space>
-        <Badge count={comments}>
+        {/* <Badge count={comments}> */}
+          <Badge>
         <MailOutlined style={{ fontSize: 24}}/>
         </Badge>
-        <Badge count={orders}>
+        {/* <Badge count={orders}> */}
+        <Badge>
         <BellFilled style={{ fontSize: 24}} 
-        onClick={() => setNotificationsOpen(true)}
+        // onClick={() => setNotificationsOpen(true)}
         />
         </Badge>
       </Space>
-      <Drawer
+      {/* <Drawer
         title="Comments"
-        open={commentsOpen}
-        onClose={() => setCommentsOpen(false)}
+        // open={commentsOpen}
+        // onClose={() => setCommentsOpen(false)}
         maskClosable>
           <List dataSource={comments}
         renderItem={(item) =>{
@@ -52,7 +55,7 @@ function AppHeader() {
         <Drawer
         title="Notification"
         open={notificationsOpen}
-        onClose={() => setNotificationsOpen(false)}
+        // onClose={() => setNotificationsOpen(false)}
         maskClosable>
           <List dataSource={orders}
         renderItem={(item) =>{
@@ -61,7 +64,7 @@ function AppHeader() {
               {item.title} </Typography.Text> has been ordered!
           </List.Item>)
          }}></List>
-        </Drawer>
+        </Drawer> */}
        
     </div>
   )

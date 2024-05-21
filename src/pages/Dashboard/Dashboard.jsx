@@ -4,7 +4,7 @@ import { Card, Space, Statistic, Table, Typography} from "antd";
 import { getOrders, getRevenue } from '../../API';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { Bar } from 'react-chartjs-2';
-import faker from "faker";
+// import faker from "@faker-js/faker";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend );
 
@@ -115,7 +115,7 @@ function DashboardChart() {
 
         })
     }, []);
-}
+
 const  options = {
     responsive: true,
     plugins: {
@@ -147,11 +147,13 @@ const data = {
         },
     ],
 };
+
 return (
     <Card style={{ width: 500, height: 250}}>
         <Bar options={options} data={data} />
     </Card>
 )
+}
 
 
 

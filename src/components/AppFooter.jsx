@@ -1,6 +1,6 @@
 import { Typography } from 'antd'
 import React from 'react'
-import "../../App.css"
+import "../App.css"
 
 function AppFooter() {
 

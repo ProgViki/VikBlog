@@ -1,5 +1,5 @@
 import React from 'react'
-import AppRoutes from '../Approutes'
+import AppRoutes from './AppRouter'
 
 function PageContent() {
 
