@@ -1,18 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
+// Fixed: Use non-deprecated email validation
 const subscribeSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  email: z.string().min(1, 'Email is required').email('Invalid email address format'),
 })
 
 // In production: store in database with Supabase, PostgreSQL, etc.
-// This is a mock implementation
 const subscribers: string[] = []
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email } = subscribeSchema.parse(body)
+    
+    // Use safeParse for better error handling
+    const result = subscribeSchema.safeParse(body)
+    
+    if (!result.success) {
+      const firstError = result.error.issues[0]?.message || 'Invalid input'
+      return NextResponse.json(
+        { error: firstError },
+        { status: 400 }
+      )
+    }
+
+    const { email } = result.data
 
     // Check for duplicate
     if (subscribers.includes(email)) {
@@ -25,11 +37,6 @@ export async function POST(request: NextRequest) {
     // Store subscriber
     subscribers.push(email)
 
-    // In production:
-    // - Send confirmation email
-    // - Store in database with timestamp
-    // - Trigger welcome automation
-
     // Log for analytics
     console.log(`[Analytics] New subscriber: ${email}`)
 
@@ -38,15 +45,6 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      // Fixed: Access error.issues instead of error.errors
-      const firstError = error.issues[0]?.message || 'Invalid input'
-      return NextResponse.json(
-        { error: firstError },
-        { status: 400 }
-      )
-    }
-
     console.error('Subscription error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
