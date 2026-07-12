@@ -5,22 +5,98 @@
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --vscode-blue: #007ACC;
+    --vscode-blue-light: #E8F0FE;
+    --vscode-dark: #005F9E;
+    --emerald: #10B981;
+    --emerald-light: #E6F9F1;
+    --emerald-dark: #059669;
+  }
+
+  * {
+    @apply border-gray-200;
+  }
+  
+  body {
+    @apply bg-white text-gray-900 antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .container-narrow {
+    @apply max-w-4xl mx-auto px-4 sm:px-6;
+  }
+  
+  .card-sharp {
+    @apply border border-gray-200 bg-white rounded-xl shadow-sm;
+    transition: box-shadow 0.15s ease, transform 0.1s ease;
+  }
+  .card-sharp:hover {
+    @apply shadow-md;
+    transform: translateY(-1px);
+  }
+
+  .btn-primary {
+    @apply text-white border border-[#007ACC] px-5 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150;
+    background-color: #007ACC;
+  }
+  .btn-primary:hover {
+    background-color: #005F9E;
+    border-color: #005F9E;
+  }
+
+  .btn-secondary {
+    @apply text-white border border-[#10B981] px-5 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150;
+    background-color: #10B981;
+  }
+  .btn-secondary:hover {
+    background-color: #059669;
+    border-color: #059669;
+  }
+
+  .tag {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  .tag-vscode {
+    @apply bg-[#E8F0FE] text-[#007ACC];
+  }
+  .tag-emerald {
+    @apply bg-[#E6F9F1] text-[#10B981];
+  }
+  .tag-gray {
+    @apply bg-gray-100 text-gray-600;
+  }
+
+  .input-subscribe {
+    @apply w-full sm:w-64 px-4 py-2.5 rounded-lg text-sm border border-gray-300 bg-white text-gray-700 transition-all duration-200;
+  }
+  .input-subscribe:focus {
+    @apply outline-none border-[#007ACC] shadow-[0_0_0_3px_rgba(0,122,204,0.15)];
+  }
+
+  .text-vscode {
+    color: #007ACC;
+  }
+  .text-emerald {
+    color: #10B981;
+  }
+  .bg-vscode {
+    background-color: #007ACC;
+  }
+  .bg-emerald {
+    background-color: #10B981;
+  }
+  .border-vscode {
+    border-color: #007ACC;
+  }
+  .border-emerald {
+    border-color: #10B981;
+  }
 }
