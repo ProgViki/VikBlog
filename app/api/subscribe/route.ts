@@ -39,8 +39,10 @@ export async function POST(request: NextRequest) {
     )
   } catch (error) {
     if (error instanceof z.ZodError) {
+      // Fixed: Access error.issues instead of error.errors
+      const firstError = error.issues[0]?.message || 'Invalid input'
       return NextResponse.json(
-        { error: error.errors[0].message },
+        { error: firstError },
         { status: 400 }
       )
     }
