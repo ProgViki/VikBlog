@@ -1,0 +1,196 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// datasource db {
+//   provider = "postgresql"  // Change to "mysql" or "sqlite" if needed
+//   url      = env("DATABASE_URL")
+// }
+
+// User model for authentication
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String?   // For credentials auth
+  image         String?   // Avatar URL
+  role          Role      @default(USER)
+  posts         Post[]
+  comments      Comment[]
+  bookmarks     Bookmark[]
+  analytics     AnalyticsEvent[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+
+// Blog post model
+model Post {
+  id            String       @id @default(cuid())
+  slug          String       @unique
+  title         String
+  excerpt       String?
+  content       String       @db.Text
+  contentJson   Json?        // For rich content
+  coverImage    String?      // Cover image URL
+  status        PostStatus   @default(DRAFT)
+  publishedAt   DateTime?
+  scheduledFor  DateTime?    // For scheduled publishing
+  views         Int          @default(0)
+  likes         Int          @default(0)
+  readTime      Int          // Estimated reading time in minutes
+  tags          String[]     // Array of tags
+  category      Category
+  authorId      String
+  author        User         @relation(fields: [authorId], references: [id])
+  comments      Comment[]
+  bookmarks     Bookmark[]
+  analytics     AnalyticsEvent[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([slug])
+  @@index([status])
+  @@index([category])
+  @@index([authorId])
+  @@map("posts")
+}
+
+// Comments with nested replies
+model Comment {
+  id            String    @id @default(cuid())
+  content       String    @db.Text
+  postId        String
+  post          Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId      String
+  author        User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parentId      String?   // For nested comments
+  parent        Comment?  @relation("parentComment", fields: [parentId], references: [id], onDelete: Cascade)
+  children      Comment[] @relation("parentComment")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([postId])
+  @@index([authorId])
+  @@map("comments")
+}
+
+// User bookmarks for saved posts
+model Bookmark {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId        String
+  post          Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+
+  @@unique([userId, postId])
+  @@map("bookmarks")
+}
+
+// Newsletter subscribers
+model Subscriber {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  verified      Boolean   @default(false)
+  verificationToken String?  @unique
+  unsubscribeToken String?  @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("subscribers")
+}
+
+// Analytics events for tracking
+model AnalyticsEvent {
+  id            String    @id @default(cuid())
+  event         String    // page_view, post_view, click, subscribe, etc.
+  path          String    // URL path
+  sessionId     String?   // For session tracking
+  userId        String?   // For authenticated users
+  metadata      Json?     // Additional data (browser, referrer, etc.)
+  timestamp     DateTime  @default(now())
+
+  @@index([event])
+  @@index([path])
+  @@index([timestamp])
+  @@index([sessionId])
+  @@map("analytics_events")
+}
+
+// Drafts for auto-saving
+model Draft {
+  id            String    @id @default(cuid())
+  userId        String
+  postId        String?   // Link to published post
+  title         String?
+  content       String?   @db.Text
+  coverImage    String?
+  tags          String[]
+  category      Category?
+  lastSaved     DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("drafts")
+}
+
+// Media files for uploads
+model Media {
+  id            String    @id @default(cuid())
+  filename      String
+  url           String
+  size          Int       // File size in bytes
+  mimeType      String
+  altText       String?
+  uploadedBy    String
+  uploadedAt    DateTime  @default(now())
+
+  @@map("media")
+}
+
+// Enums
+enum Role {
+  USER
+  ADMIN
+  EDITOR
+}
+
+enum PostStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  SCHEDULED
+  ARCHIVED
+}
+
+enum Category {
+  DISTRIBUTED_SYSTEMS
+  DEVOPS
+  ANALYTICS
+  SECURITY
+  CLOUD
+  ARCHITECTURE
+  SDLC
+  OBSERVABILITY
+  AI_ML
+  PERFORMANCE
+}
