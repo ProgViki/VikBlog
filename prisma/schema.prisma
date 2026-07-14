@@ -8,19 +8,19 @@ generator client {
   output   = "../lib/generated/prisma"
 }
 
-datasource db {
-  provider = "postgresql"
-}
+// datasource db {
+//   provider = "postgresql"
+// }
 
 
 // generator client {
 //   provider = "prisma-client-js"
 // }
 
-// datasource db {
-//   provider = "postgresql"  // Change to "mysql" or "sqlite" if needed
-//   url      = env("DATABASE_URL")
-// }
+datasource db {
+  provider = "postgresql"  // Change to "mysql" or "sqlite" if needed
+  url      = env("DATABASE_URL")
+}
 
 // User model for authentication
 model User {
@@ -124,7 +124,10 @@ model AnalyticsEvent {
   event         String    // page_view, post_view, click, subscribe, etc.
   path          String    // URL path
   sessionId     String?   // For session tracking
+  users         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String?   // For authenticated users
+  post          Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId        String?   // For post-related events
   metadata      Json?     // Additional data (browser, referrer, etc.)
   timestamp     DateTime  @default(now())
 
