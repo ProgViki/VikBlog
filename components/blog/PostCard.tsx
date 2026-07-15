@@ -1,30 +1,25 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { format } from 'date-fns'
-import { Calendar, Clock, Eye, Heart } from 'lucide-react'
+import { Calendar, Clock, Eye, Heart, Tag } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/Card'
 import type { Post } from '@/types'
 
 interface PostCardProps {
   post: Post
-  variant?: 'default' | 'compact'
-}
-
-const categoryColors: Record<string, string> = {
-  DISTRIBUTED_SYSTEMS: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-  DEVOPS: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300',
-  ANALYTICS: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
-  SECURITY: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
-  CLOUD: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300',
-  ARCHITECTURE: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
-  SDLC: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300',
-  OBSERVABILITY: 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300',
-  AI_ML: 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300',
-  PERFORMANCE: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+  variant?: 'default' | 'featured' | 'compact'
 }
 
 export function PostCard({ post, variant = 'default' }: PostCardProps) {
+  const categoryColors: Record<string, string> = {
+    'DISTRIBUTED_SYSTEMS': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+    'DEVOPS': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300',
+    'ANALYTICS': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
+    'SECURITY': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+    'CLOUD': 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300',
+  }
+
   if (variant === 'compact') {
     return (
       <Link href={`/posts/${post.slug}`}>
@@ -59,7 +54,7 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
   return (
     <article className="group">
       <Link href={`/posts/${post.slug}`}>
-        <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 h-full flex flex-col">
+        <Card className="overflow-hidden hover:shadow-lg transition-all duration-300">
           {post.coverImage && (
             <div className="relative h-48 w-full overflow-hidden">
               <Image
@@ -72,8 +67,9 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
           )}
           <CardHeader>
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              {post.tags.slice(0, 2).map((tag) => (
+              {post.tags.slice(0, 3).map((tag) => (
                 <Badge key={tag} variant="outline" className="text-xs">
+                  <Tag className="h-3 w-3 mr-1" />
                   {tag}
                 </Badge>
               ))}
@@ -86,7 +82,7 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
             </h2>
             <p className="text-muted-foreground line-clamp-2">{post.excerpt}</p>
           </CardHeader>
-          <CardFooter className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mt-auto">
+          <CardFooter className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
               <span>{format(new Date(post.publishedAt!), 'MMM d, yyyy')}</span>
