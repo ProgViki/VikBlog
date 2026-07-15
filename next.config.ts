@@ -1,15 +1,7 @@
-const withMDX = require('@next/mdx')({
-  extension: /\.mdx?$/,
-  options: {
-    remarkPlugins: [],
-    rehypePlugins: [],
-    providerImportSource: '@mdx-js/react',
-  },
-})
+import type { NextConfig } from 'next'
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
+const nextConfig: NextConfig = {
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx'],
   images: {
     remotePatterns: [
       {
@@ -19,29 +11,33 @@ const nextConfig = {
     ],
     formats: ['image/avif', 'image/webp'],
   },
-  experimental: {
-    optimizePackageImports: ['lucide-react'],
-  },
+  // Empty turbopack config to silence warning
+  turbopack: {},
   async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
-          },
-        ],
-      },
-      {
+    const headers = []
+    
+    // Security headers (keep these)
+    headers.push({
+      source: '/(.*)',
+      headers: [
+        {
+          key: 'X-Content-Type-Options',
+          value: 'nosniff',
+        },
+        {
+          key: 'X-Frame-Options',
+          value: 'DENY',
+        },
+        {
+          key: 'X-XSS-Protection',
+          value: '1; mode=block',
+        },
+      ],
+    })
+    
+    // Cache headers only in production
+    if (process.env.NODE_ENV === 'production') {
+      headers.push({
         source: '/_next/static/(.*)',
         headers: [
           {
@@ -49,9 +45,27 @@ const nextConfig = {
             value: 'public, max-age=31536000, immutable',
           },
         ],
-      },
-    ]
+      })
+    }
+    
+    return headers
   },
 }
 
-module.exports = withMDX(nextConfig)
+// MDX support (if installed)
+let config = nextConfig
+try {
+  const withMDX = require('@next/mdx')({
+    extension: /\.mdx?$/,
+    options: {
+      remarkPlugins: [],
+      rehypePlugins: [],
+      providerImportSource: '@mdx-js/react',
+    },
+  })
+  config = withMDX(nextConfig)
+} catch (e) {
+  console.log('Running without MDX support')
+}
+
+export default config
