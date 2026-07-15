@@ -1,10 +1,13 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { format } from 'date-fns'
-import { Calendar, Clock, Eye, Heart, Tag } from 'lucide-react'
+// import { Calendar, Clock, Eye, Heart, Tag } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/Card'
 import type { Post } from '@/types'
+import { FaCalendar, FaClock, FaHeart, FaEye } from 'react-icons/fa';
+import { Tag } from 'lucide-react'
+import { format, isValid } from 'date-fns'
+
 
 interface PostCardProps {
   post: Post
@@ -12,6 +15,15 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, variant = 'default' }: PostCardProps) {
+
+    // ✅ Fixed: Format date safely
+  const formatDate = (date: string | null | undefined) => {
+    if (!date) return 'Draft'
+    const parsedDate = new Date(date)
+    return isValid(parsedDate) ? format(parsedDate, 'MMM d, yyyy') : 'Invalid date'
+  }
+
+
   const categoryColors: Record<string, string> = {
     'DISTRIBUTED_SYSTEMS': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
     'DEVOPS': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300',
@@ -39,9 +51,12 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
               <div className="flex-1 min-w-0">
                 <h3 className="font-medium text-sm truncate">{post.title}</h3>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                  <span>{format(new Date(post.publishedAt!), 'MMM d')}</span>
+                  <span>
+                    {/* {format(new Date(post.publishedAt!), 'MMM d')} */}
+                      <span>{formatDate(post.publishedAt)}</span>
+                  </span>
                   <span>·</span>
-                  <span>{post.readTime} min read</span>
+                  <span>{post.readTime || 5} min read</span>
                 </div>
               </div>
             </div>
@@ -84,20 +99,20 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
           </CardHeader>
           <CardFooter className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
+              <FaCalendar className="h-4 w-4" />
               <span>{format(new Date(post.publishedAt!), 'MMM d, yyyy')}</span>
             </div>
             <div className="flex items-center gap-1">
-              <Clock className="h-4 w-4" />
-              <span>{post.readTime} min read</span>
+              <FaClock className="h-4 w-4" />
+              <span>{post.readTime || 5} min read</span>
             </div>
             <div className="flex items-center gap-1">
-              <Eye className="h-4 w-4" />
-              <span>{post.views.toLocaleString()}</span>
+              <FaEye className="h-4 w-4" />
+              <span>{(post.views || 0).toLocaleString()}</span>
             </div>
             <div className="flex items-center gap-1">
-              <Heart className="h-4 w-4" />
-              <span>{post.likes}</span>
+              <FaHeart className="h-4 w-4" />
+              <span>{(post.likes || 0).toLocaleString()}</span>
             </div>
           </CardFooter>
         </Card>

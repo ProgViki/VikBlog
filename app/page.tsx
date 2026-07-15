@@ -1,7 +1,7 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import SubscriptionCard from '@/components/SubscriptionCard'
-import PostList from '@/components/PostList'
+import { Header } from '@/components/shared/Header'
+import { Footer } from '@/components/shared/Footer'
+import { SubscriptionCard } from '@/components/shared/SubscriptionCard'
+import { PostList } from '@/components/blog/PostList'
 import { getRecentPosts } from '@/lib/posts'
 
 export default function HomePage() {
@@ -59,3 +59,17 @@ export default function HomePage() {
     </>
   )
 }
+
+// // app/page.tsx - Debug version
+// import { Suspense } from 'react'
+
+// export default function HomePage() {
+//   return (
+//     <div>
+//       <h1>Testing imports...</h1>
+//       <Suspense fallback={<div>Loading...</div>}>
+//         {/* Test imports one by one */}
+//       </Suspense>
+//     </div>
+//   )
+// }

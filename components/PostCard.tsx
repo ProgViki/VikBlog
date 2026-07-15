@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { format } from 'date-fns'
-import { Calendar, Clock, Eye, Heart } from 'lucide-react'
+import { format, isValid } from 'date-fns'
+// import { Calendar, Clock, Eye, Heart } from 'lucide-react'
+import { FaCalendar, FaClock, FaEye, FaHeart } from 'react-icons/fa';
 import { Badge } from '@/components/ui/Badge'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/Card'
 import type { Post } from '@/types'
@@ -25,6 +26,13 @@ const categoryColors: Record<string, string> = {
 }
 
 export function PostCard({ post, variant = 'default' }: PostCardProps) {
+
+   const formatDate = (date: string | null | undefined) => {
+    if (!date) return 'Draft'
+    const parsedDate = new Date(date)
+    return isValid(parsedDate) ? format(parsedDate, 'MMM d, yyyy') : 'Invalid date'
+  }
+
   if (variant === 'compact') {
     return (
       <Link href={`/posts/${post.slug}`}>
@@ -88,20 +96,20 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
           </CardHeader>
           <CardFooter className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mt-auto">
             <div className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              <span>{format(new Date(post.publishedAt!), 'MMM d, yyyy')}</span>
+              <FaCalendar className="h-4 w-4" />
+             <span>{formatDate(post.publishedAt)}</span>
             </div>
             <div className="flex items-center gap-1">
-              <Clock className="h-4 w-4" />
-              <span>{post.readTime} min read</span>
+              <FaClock className="h-4 w-4" />
+              <span>{post.readTime || 5} min read</span>
             </div>
             <div className="flex items-center gap-1">
-              <Eye className="h-4 w-4" />
-              <span>{post.views.toLocaleString()}</span>
+              <FaEye className="h-4 w-4" />
+              <span>{(post.views || 0).toLocaleString()}</span>
             </div>
             <div className="flex items-center gap-1">
-              <Heart className="h-4 w-4" />
-              <span>{post.likes}</span>
+              <FaHeart className="h-4 w-4" />
+              <span>{post.likes || 0}</span>
             </div>
           </CardFooter>
         </Card>

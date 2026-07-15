@@ -28,6 +28,7 @@
     "@radix-ui/react-tooltip": "^1.2.12",
     "@upstash/redis": "^1.38.0",
     "bcryptjs": "^3.0.3",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
     "framer-motion": "^12.42.2",

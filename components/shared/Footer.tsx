@@ -1,5 +1,7 @@
 import Link from 'next/link'
-import { Github, Twitter, Linkedin, Rss, Mail } from 'lucide-react'
+// import { Github, Twitter, Linkedin, Rss, Mail } from 'lucide-react'
+import { FaGithub, FaTwitter, FaLinkedin, FaRss, FaEnvelope } from 'react-icons/fa';
+import { FiMail } from "react-icons/fi";
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -32,35 +34,35 @@ export function Footer() {
               className="text-muted-foreground hover:text-primary transition-colors"
               aria-label="GitHub"
             >
-              <Github className="h-5 w-5" />
+              <FaGithub className="h-5 w-5" />
             </Link>
             <Link
               href="#"
               className="text-muted-foreground hover:text-primary transition-colors"
               aria-label="Twitter"
             >
-              <Twitter className="h-5 w-5" />
+              <FaTwitter className="h-5 w-5" />
             </Link>
             <Link
               href="#"
               className="text-muted-foreground hover:text-primary transition-colors"
               aria-label="LinkedIn"
             >
-              <Linkedin className="h-5 w-5" />
+              <FaLinkedin className="h-5 w-5" />
             </Link>
             <Link
               href="#"
               className="text-muted-foreground hover:text-primary transition-colors"
               aria-label="RSS"
             >
-              <Rss className="h-5 w-5" />
+              <FaRss className="h-5 w-5" />
             </Link>
             <Link
               href="#"
               className="text-muted-foreground hover:text-primary transition-colors"
               aria-label="Email"
             >
-              <Mail className="h-5 w-5" />
+              <FiMail className="h-5 w-5" />
             </Link>
           </div>
         </div>
